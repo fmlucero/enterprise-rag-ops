@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+langchain
+langchain-core
+langchain-community
+pinecone-client
+sentence-transformers
+ragas
+python-dotenv
+pandas
+datasets

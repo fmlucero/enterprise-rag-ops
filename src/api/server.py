@@ -1,20 +1,22 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from src.core.config import get_settings
+from src.api.routers.rag_router import router as rag_router
 
-app = FastAPI(title="Enterprise RAG Ops API")
+settings = get_settings()
 
-class QueryRequest(BaseModel):
-    query: str
+app = FastAPI(
+    title=settings.app_name,
+    description="Production-ready Retrieval-Augmented Generation API with Evaluation metrics",
+    version="1.0.0"
+)
 
-@app.get("/health")
+# Incorporate the RAG endpoints
+app.include_router(rag_router, prefix="/api/v1")
+
+@app.get("/health", tags=["System"])
 def health_check():
-    return {"status": "ok"}
-
-@app.post("/rag")
-def run_rag(request: QueryRequest):
-    # This will be replaced with our actual RAG logic
     return {
-        "query": request.query,
-        "response": "This is a placeholder response. VectorDB integration pending.",
-        "metrics": {"faithfulness_score": 0.0, "relevance_score": 0.0}
+        "status": "ok",
+        "environment": settings.environment,
+        "service": settings.app_name
     }
